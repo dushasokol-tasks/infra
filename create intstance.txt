@@ -1,0 +1,17 @@
+gcloud compute instances create --boot-disk-size=10GB --image=ubuntu-1604-xenial-v20170815a --image-project=ubuntu-os-cloud --machine-type=g1-small --tags puma-server --restart-on-failure --zone=europe-west3-c reddit-app1 --scopes storage-ro --metadata startup-script-url=gs://stratup-scripts-repo/create_intstance.sh
+
+
+gcloud compute instances create --boot-disk-size=10GB --image=ubuntu-1604-xenial-v20170815a --image-project=ubuntu-os-cloud --machine-type=g1-small --tags puma-server --restart-on-failure --zone=europe-west3-c reddit-app1 --scopes storage-ro --metadata startup-script-url=gs://stratup-scripts-repo/create_intstance.sh
+
+
+
+gcloud compute instances create test-01 --tags http --metadata-from-file startup-script=test.sh --zone=europe-west3-c
+
+
+
+gcloud compute instances create guestbook --tags http --zone=europe-west3-c --metadata startup-script-url=gs://stratup-scripts-repo/test.sh
+
+
+
+C:\Users\comp\AppData\Local\Google\Cloud SDK>gsutil cat gs://stratup-scripts-rep
+o/test.sh
