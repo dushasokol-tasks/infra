@@ -1,0 +1,25 @@
+{
+ "builders": [
+	{
+	 "type": "googlecompute",
+	 "project_id": "brave-octane-262913",
+	 "image_name": "reddit-base-{{timestamp}}",
+	 "source_image": "ubuntu-1604-xenial-v20191217",
+	 "zone": "europe-west3-c",
+	 "ssh_username": "appuser",
+	 "machine_type": "f1-micro"
+	}
+ ],
+ "provisioners": [
+	{
+	 "type": "shell",
+	 "script": "E:/prj/repo/infra/packer/scripts/install_ruby.sh",
+	 "execute_command": "sudo {{.Path}}"
+	},
+	{
+	 "type": "shell",
+	 "script": "E:/prj/repo/infra/packer/scripts/install_mongodb.sh",
+	 "execute_command": "sudo {{.Path}}"
+	}
+ ]
+}
