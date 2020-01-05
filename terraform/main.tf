@@ -4,19 +4,24 @@ terraform {
 
 provider "google" {
   version = "2.0.0"
-  project = "brave-octane-262913"
-  region  = "europe-west-3"
+  project = "${var.project}"
+  region  = "${var.region}"
 }
 
 resource "google_compute_instance" "app" {
-  name         = "reddit-app"
+  name         = "reddit-app-${count.index + 1}"
   machine_type = "g1-small"
-  zone         = "europe-west3-c"
-  tags         = ["reddit-app"]
+
+  # zone         = "europe-west3-c"
+  zone = "${var.zone}"
+
+  count = "${var.app-instances-count}"
+
+
 
   boot_disk {
     initialize_params {
-      image = "reddit-base-1577465538"
+      image = "${var.disk_image}"
     }
   }
 
@@ -25,22 +30,29 @@ resource "google_compute_instance" "app" {
     access_config = {}
   }
 
+  tags = ["reddit-app"]
+
   metadata {
-    ssh-keys = "appuser:${file("~/.ssh/appuser.pub")}"
+     ssh-keys = "${var.app_user}:${file(var.public_key_path)}"
   }
 
   provisioner "file" {
     source      = "files/puma.service"
     destination = "/tmp/puma.service"
   }
-  provisioner "remote-exec" {
-	  script = "files/deploy.sh"
-  }
+
+
+   provisioner "remote-exec" {
+     script = "files/deploy.sh"
+   }
+
   connection {
-	  type = "ssh"
-	  user = "appuser"
-	  agent = false
-	  private_key = "${file("~/.ssh/appuser")}"
+    type = "ssh"
+    user = "${var.app_user}"
+
+    # user        = "appuser"
+    agent       = false
+    private_key = "${file(var.private_key_path)}"
   }
 }
 
@@ -56,3 +68,9 @@ resource "google_compute_firewall" "firewall_puma" {
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["reddit-app"]
 }
+
+resource "google_compute_project_metadata_item" "app" {
+  key   = "ssh-keys"
+  value = "${chomp(file(var.public_key_path))}\n"
+}
+

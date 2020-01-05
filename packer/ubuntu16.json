@@ -32,11 +32,6 @@
 	 "type": "shell",
 	 "script": "E:/prj/repo/infra/packer/scripts/install_mongodb.sh",
 	 "execute_command": "sudo {{.Path}}"
-	},
-	{
-	 "type": "shell",
-	 "script": "E:/prj/repo/infra/packer/scripts/deploy_app.sh",
-	 "execute_command": "sudo {{.Path}}"
 	}
 
  ]
